@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pl.kozubek.writerlambda.app.data.mapper.MeasuringDataMapper">
+    <resultMap id="MeasuringDataMap" type="Data">
+        <id column="id" property="id"/>
+        <result column="pollution_key" property="key"/>
+    </resultMap>
+
+    <resultMap id="MeasuringDataWithValuesMap" type="DataDto">
+        <id column="dataId" property="id"/>
+        <result column="key" property="key"/>
+        <collection property="values" ofType="ValueDto">
+            <id column="valueId" property="id"/>
+            <result column="date" property="date"/>
+            <result column="value" property="value"/>
+        </collection>
+    </resultMap>
+
+    <select id="getData" resultMap="MeasuringDataMap">
+        SELECT id,
+               pollution_key
+        FROM MEASURING_DATA
+    </select>
+
+    <select id="getDataWithValue" resultMap="MeasuringDataWithValuesMap">
+        SELECT D.id              as dataId,
+               D.pollution_key   as `key`,
+               V.id              as valueId,
+               V.date_of_reading as `date`,
+               V.pollution_value as `value`
+        FROM MEASURING_DATA D
+                 LEFT OUTER JOIN DATA_VALUES DV ON D.id = DV.data_id
+                 RIGHT OUTER JOIN MEASURING_DATA_VALUES V ON V.id = DV.value_id
+        ORDER BY V.date_of_reading DESC
+    </select>
+
+    <insert id="addData" parameterType="Data" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO MEASURING_DATA (pollution_key)
+        VALUES (#{key})
+    </insert>
+
+    <insert id="addValue" parameterType="Value" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO MEASURING_DATA_VALUES (date_of_reading, pollution_value)
+        VALUES (#{date}, #{value})
+    </insert>
+
+    <insert id="connectDataAndValue">
+        INSERT INTO DATA_VALUES (data_id, value_id)
+        VALUES (#{dataId}, #{valueId})
+    </insert>
+
+    <select id="getMeasuringData" resultMap="MeasuringDataWithValuesMap">
+        SELECT D.id              as dataId,
+               D.pollution_key   as `key`,
+               V.id              as valueId,
+               V.date_of_reading as `date`,
+               V.pollution_value as `value`
+        FROM MEASURING_DATA D
+                 LEFT OUTER JOIN DATA_VALUES DV ON D.id = DV.data_id
+                 RIGHT OUTER JOIN MEASURING_DATA_VALUES V ON V.id = DV.value_id
+        WHERE D.id = #{dataId}
+        ORDER BY V.date_of_reading DESC LIMIT 1
+    </select>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pl.kozubek.writerlambda.app.station.mapper.MeasuringStationMapper">
+
+    <resultMap id="MeasuringStationMap" type="Station">
+        <id column="id" property="id"/>
+        <result column="station_name" property="stationName"/>
+        <result column="gegr_lat" property="gegrLat"/>
+        <result column="gegr_lon" property="gegrLon"/>
+        <result column="city" property="city"/>
+        <result column="address_street" property="addressStreet"/>
+    </resultMap>
+
+    <resultMap id="MeasuringCityMap" type="City">
+        <id column="id" property="id"/>
+        <result column="city_name" property="cityName"/>
+        <result column="commune" property="commune"/>
+    </resultMap>
+
+    <resultMap id="MeasuringCommuneMap" type="Commune">
+        <id column="id" property="id"/>
+        <result column="commune_name" property="communeName"/>
+        <result column="district_name" property="districtName"/>
+        <result column="province_name" property="provinceName"/>
+    </resultMap>
+
+    <resultMap id="MeasuringStationWithCityAndCommuneSelect" type="StationDto">
+        <id column="stationId" property="id"/>
+        <result column="station_name" property="stationName"/>
+        <result column="gegr_lat" property="gegrLat"/>
+        <result column="gegr_lon" property="gegrLon"/>
+        <result column="address_street" property="addressStreet"/>
+        <association property="city" column="city" javaType="CityDto">
+            <id column="cityId" property="id"/>
+            <result column="city_name" property="name"/>
+            <association property="commune" column="commune" javaType="CommuneDto">
+                <id column="communeId" property="id"/>
+                <result column="commune_name" property="communeName"/>
+                <result column="district_name" property="districtName"/>
+                <result column="province_name" property="provinceName"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="getMeasuringStations" resultMap="MeasuringStationMap">
+        SELECT id, station_name, gegr_lat, gegr_lon, city, address_street
+        FROM MEASURING_STATION
+    </select>
+
+    <select id="getMeasuringStationWithCityAndCommune" resultMap="MeasuringStationWithCityAndCommuneSelect">
+        SELECT station.id  as stationId,
+               station.station_name,
+               station.gegr_lat,
+               station.gegr_lon,
+               station.address_street,
+               city.id     as cityId,
+               city.city_name,
+               communte.id as communeId,
+               communte.commune_name,
+               communte.district_name,
+               communte.province_name
+        FROM MEASURING_STATION station
+                 INNER JOIN MEASURING_CITY city
+                            ON station.city = city.id
+                 INNER JOIN MEASURING_CITY_COMMUNES communte
+                            ON city.commune = communte.id
+    </select>
+
+    <select id="existStationById" resultType="java.lang.Boolean">
+        SELECT CASE
+                   WHEN EXISTS(
+                           SELECT 1
+                           FROM MEASURING_STATION
+                           WHERE id = #{id})
+                       THEN 'FALSE'
+                   ELSE 'TRUE'
+                   END
+    </select>
+
+    <select id="existCityById" resultType="java.lang.Boolean">
+        SELECT CASE
+                   WHEN EXISTS(
+                           SELECT 1
+                           FROM MEASURING_CITY
+                           WHERE id = #{id})
+                       THEN 'FALSE'
+                   ELSE 'TRUE'
+                   END
+    </select>
+
+    <select id="existCommuneByCommuneNameAndDistrictNameAndProvinceName" resultType="java.lang.Boolean">
+        SELECT CASE
+                   WHEN EXISTS(
+                           SELECT 1
+                           FROM MEASURING_CITY_COMMUNES
+                           WHERE commune_name = #{communeName}
+                             AND district_name = #{districtName}
+                             AND province_name = #{provinceName})
+                       THEN 'FALSE'
+                   ELSE 'TRUE'
+                   END
+    </select>
+
+    <select id="getStationByNearestLocalization" resultMap="MeasuringStationWithCityAndCommuneSelect">
+        SELECT station.id as stationId,
+               station.station_name,
+               station.gegr_lat,
+               station.gegr_lon,
+               station.address_street,
+               city.id    as cityId,
+               city.city_name,
+               commune.id as communeId,
+               commune.commune_name,
+               commune.district_name,
+               commune.province_name
+        FROM (SELECT S.ID,
+                     S.STATION_NAME,
+                     S.GEGR_LAT,
+                     S.GEGR_LON,
+                     S.CITY,
+                     S.ADDRESS_STREET,
+                     ROUND((ABS(S.GEGR_LAT - #{gegrLat}) + ABS(S.GEGR_LON - #{gegrLon})) / 2, 4) AS Distance
+              FROM MEASURING_STATION AS S
+              WHERE (S.GEGR_LAT IS NOT NULL)
+                AND (GEGR_LON IS NOT NULL)) AS station
+                 INNER JOIN MEASURING_CITY city
+                            ON station.CITY = city.ID
+                 INNER JOIN MEASURING_CITY_COMMUNES commune
+                            ON city.COMMUNE = commune.ID
+        ORDER BY Distance LIMIT 1
+    </select>
+
+    <insert id="addMeasuringCommune" parameterType="Commune" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO MEASURING_CITY_COMMUNES (commune_name, district_name, province_name)
+        VALUES (#{measuringCommune.communeName}, #{measuringCommune.districtName}, #{measuringCommune.provinceName})
+    </insert>
+
+    <insert id="addMeasuringCity" parameterType="City">
+        INSERT INTO MEASURING_CITY (id, city_name, commune)
+        VALUES (#{measuringCity.id}, #{measuringCity.name}, #{measuringCity.commune})
+    </insert>
+
+    <insert id="addMeasuringStation" parameterType="Station">
+        INSERT INTO MEASURING_STATION (id, station_name, gegr_lat, gegr_lon, city, address_street)
+        VALUES (#{measuringStation.id}, #{measuringStation.stationName}, #{measuringStation.gegrLat},
+                #{measuringStation.gegrLon}, #{measuringStation.city}, #{measuringStation.addressStreet})
+    </insert>
+</mapper>
