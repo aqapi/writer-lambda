@@ -11,6 +11,7 @@ public class DataDtoMapper {
 
     public MeasuringData to(MeasuringDataDto dataDto) {
         return MeasuringData.builder()
+                .stationId(dataDto.getStationId())
                 .key(dataDto.getKey())
                 .build();
     }

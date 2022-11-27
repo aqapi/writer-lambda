@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.kozubek.writerlambda.app.station.model.MeasuringStation;
+import pl.kozubek.writerlambda.app.station.model.dto.MeasuringStationDto;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MeasuringDataDto {
     private Long id;
+    private Long stationId;
     private String key;
     private List<MeasuringValueDto> values;
 }

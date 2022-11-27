@@ -42,30 +42,6 @@
         </association>
     </resultMap>
 
-    <select id="getMeasuringStations" resultMap="MeasuringStationMap">
-        SELECT id, station_name, gegr_lat, gegr_lon, city, address_street
-        FROM MEASURING_STATION
-    </select>
-
-    <select id="getMeasuringStationWithCityAndCommune" resultMap="MeasuringStationWithCityAndCommuneSelect">
-        SELECT station.id  as stationId,
-               station.station_name,
-               station.gegr_lat,
-               station.gegr_lon,
-               station.address_street,
-               city.id     as cityId,
-               city.city_name,
-               communte.id as communeId,
-               communte.commune_name,
-               communte.district_name,
-               communte.province_name
-        FROM MEASURING_STATION station
-                 INNER JOIN MEASURING_CITY city
-                            ON station.city = city.id
-                 INNER JOIN MEASURING_CITY_COMMUNES communte
-                            ON city.commune = communte.id
-    </select>
-
     <select id="existStationById" resultType="java.lang.Boolean">
         SELECT CASE
                    WHEN EXISTS(
@@ -99,35 +75,6 @@
                        THEN 'FALSE'
                    ELSE 'TRUE'
                    END
-    </select>
-
-    <select id="getStationByNearestLocalization" resultMap="MeasuringStationWithCityAndCommuneSelect">
-        SELECT station.id as stationId,
-               station.station_name,
-               station.gegr_lat,
-               station.gegr_lon,
-               station.address_street,
-               city.id    as cityId,
-               city.city_name,
-               commune.id as communeId,
-               commune.commune_name,
-               commune.district_name,
-               commune.province_name
-        FROM (SELECT S.ID,
-                     S.STATION_NAME,
-                     S.GEGR_LAT,
-                     S.GEGR_LON,
-                     S.CITY,
-                     S.ADDRESS_STREET,
-                     ROUND((ABS(S.GEGR_LAT - #{gegrLat}) + ABS(S.GEGR_LON - #{gegrLon})) / 2, 4) AS Distance
-              FROM MEASURING_STATION AS S
-              WHERE (S.GEGR_LAT IS NOT NULL)
-                AND (GEGR_LON IS NOT NULL)) AS station
-                 INNER JOIN MEASURING_CITY city
-                            ON station.CITY = city.ID
-                 INNER JOIN MEASURING_CITY_COMMUNES commune
-                            ON city.COMMUNE = commune.ID
-        ORDER BY Distance LIMIT 1
     </select>
 
     <insert id="addMeasuringCommune" parameterType="Commune" useGeneratedKeys="true" keyProperty="id" keyColumn="id">

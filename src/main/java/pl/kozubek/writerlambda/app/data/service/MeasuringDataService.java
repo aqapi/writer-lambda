@@ -9,7 +9,6 @@ import pl.kozubek.writerlambda.app.data.model.MeasuringValue;
 import pl.kozubek.writerlambda.app.data.model.dto.MeasuringDataDto;
 import pl.kozubek.writerlambda.app.data.service.mapper.DataDtoMapper;
 import pl.kozubek.writerlambda.app.data.service.mapper.ValueDtoMapper;
-import pl.kozubek.writerlambda.app.station.model.MeasuringStation;
 import pl.kozubek.writerlambda.webClient.MeasuringClient;
 
 import java.util.List;
@@ -35,9 +34,14 @@ public class MeasuringDataService {
         MeasuringValue value = values.get(0);
         dataMapper.addData(data);
         dataMapper.addValue(value);
-
+//
         Long dataId = data.getId();
         Long valueId = value.getId();
         dataMapper.connectDataAndValue(dataId, valueId);
+//        for (MeasuringValue value : values) {
+//            dataMapper.addValue(value);
+//            Long valueId = value.getId();
+//            dataMapper.connectDataAndValue(dataId, valueId);
+//        }
     }
 }

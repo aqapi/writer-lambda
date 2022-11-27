@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MeasuringData {
     private Long id;
+    private Long stationId;
     private String key;
 }
