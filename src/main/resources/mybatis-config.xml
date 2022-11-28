@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <!--        Mapping to model of station        -->
+        <typeAlias type="pl.kozubek.writerlambda.app.station.model.MeasuringStation" alias="Station"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.station.model.MeasuringCity" alias="City"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.station.model.MeasuringCityCommune" alias="Commune"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.station.model.dto.MeasuringStationDto" alias="StationDto"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.station.model.dto.MeasuringCityDto" alias="CityDto"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.station.model.dto.MeasuringCityCommuneDto" alias="CommuneDto"/>
+
+        <!--        Mapping to model of data        -->
+        <typeAlias type="pl.kozubek.writerlambda.app.data.model.MeasuringData" alias="Data"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.data.model.MeasuringValue" alias="Value"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.data.model.dto.MeasuringDataDto" alias="DataDto"/>
+        <typeAlias type="pl.kozubek.writerlambda.app.data.model.dto.MeasuringValueDto" alias="ValueDto"/>
+
+        <!--        Mapping to package      -->
+        <package name="pl.kozubek.writerlambda.app"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="pl/kozubek/writerlambda/app/station/mapper/StationMapper.xml"/>
+        <mapper resource="pl/kozubek/writerlambda/app/data/mapper/DataMapper.xml"/>
+    </mappers>
+</configuration>

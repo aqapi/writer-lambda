@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pl.kozubek.writerlambda.app.data.mapper.MeasuringDataMapper">
+    <resultMap id="MeasuringDataMap" type="Data">
+        <id column="id" property="id"/>
+        <result column="stationId" property="stationId"/>
+        <result column="key" property="key"/>
+    </resultMap>
+
+    <resultMap id="MeasuringDataWithValuesMap" type="DataDto">
+        <id column="dataId" property="id"/>
+        <result column="stationId" property="stationId"/>
+        <result column="key" property="key"/>
+        <collection property="values" ofType="ValueDto">
+            <id column="valueId" property="id"/>
+            <result column="date" property="date"/>
+            <result column="value" property="value"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="MeasuringDataWithValuesMapAndStation" type="DataDto">
+        <id column="dataId" property="id"/>
+        <result column="key" property="key"/>
+        <result column="stationId" property="stationId"/>
+        <association property="stationId" column="stationId">
+            <id column="stationId" property="id"/>
+            <result column="station_name" property="stationName"/>
+            <result column="gegr_lat" property="gegrLat"/>
+            <result column="gegr_lon" property="gegrLon"/>
+            <result column="address_street" property="addressStreet"/>
+            <association property="city" column="city" javaType="CityDto">
+                <id column="cityId" property="id"/>
+                <result column="city_name" property="name"/>
+                <association property="commune" column="commune" javaType="CommuneDto">
+                    <id column="communeId" property="id"/>
+                    <result column="commune_name" property="communeName"/>
+                    <result column="district_name" property="districtName"/>
+                    <result column="province_name" property="provinceName"/>
+                </association>
+            </association>
+        </association>
+        <collection property="values" ofType="ValueDto">
+            <id column="valueId" property="id"/>
+            <result column="date" property="date"/>
+            <result column="value" property="value"/>
+        </collection>
+    </resultMap>
+
+    <insert id="addData" parameterType="Data" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO MEASURING_DATA (stationId ,pollution_key)
+        VALUES (#{stationId}, #{key})
+    </insert>
+
+    <insert id="addValue" parameterType="Value" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO MEASURING_DATA_VALUES (date_of_reading, pollution_value)
+        VALUES (#{date}, #{value})
+    </insert>
+
+    <insert id="connectDataAndValue">
+        INSERT INTO DATA_VALUES (data_id, value_id)
+        VALUES (#{dataId}, #{valueId})
+    </insert>
+</mapper>
