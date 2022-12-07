@@ -1,0 +1,28 @@
+name: Deploy Function Code
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Build Package
+        run: |
+          gradle clean build
+          cp build/libs/measuringStation-0.0.1-SNAPSHOT.jar ./deployment.jar
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Update Lambda function
+        run: aws lambda update-function-code --function-name aqapi-writer-lambda-main --zip-file fileb://deployment.jar
