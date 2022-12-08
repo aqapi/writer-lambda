@@ -8,6 +8,7 @@ import pl.kozubek.writerlambda.app.data.model.dto.MeasuringValueDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -24,8 +25,7 @@ public class ValueDtoMapper {
         if (Objects.isNull(valuesDto))
             return Collections.emptyList();
         return valuesDto.stream()
-                .map(this::to)
-                .toList();
+                .map(this::to).collect(Collectors.toList());
     }
 
     public MeasuringValueDto to(MeasuringValue value) {
