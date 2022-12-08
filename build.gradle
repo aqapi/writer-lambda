@@ -17,7 +17,7 @@ apply plugin: 'org.springframework.boot.experimental.thin-launcher'
 assemble.dependsOn = [thinJar]
 
 group = 'pl.kozubek'
-version = '0.0.1-SNAPSHOT'
+
 sourceCompatibility = '11'
 
 configurations {
@@ -58,6 +58,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-//tasks.named('test') {
-//    useJUnitPlatform()
-//}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'pl.kozubek.writerlambda.Application'
+        )
+    }
+}
