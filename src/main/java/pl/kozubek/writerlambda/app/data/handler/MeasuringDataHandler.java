@@ -11,7 +11,10 @@ import pl.kozubek.writerlambda.webClient.MeasuringClient;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 @RequiredArgsConstructor
+@Component
 public class MeasuringDataHandler implements RequestHandler<Map<String, String>, String> {
 
     private final MeasuringClient client;
