@@ -23,7 +23,7 @@ jobs:
         run: gradle clean build
 
       - name: Copy deployment package
-        run: cp build/libs/writerlambda.jar ./deployment.jar
+        run: cp build/libs/writer-lambda.jar ./deployment.jar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
