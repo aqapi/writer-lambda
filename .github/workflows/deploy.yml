@@ -20,8 +20,14 @@ jobs:
           cache: "gradle"
 
       - name: Build Package
+        run: gradle clean build
+
+      - name: Copy deployment package
         run: |
-          gradle clean build
+          pwd
+          ls
+          ls build/
+          ls build/libs/
           cp build/libs/app-0.0.1-SNAPSHOT.jar ./deployment.jar
 
       - name: Configure AWS credentials
