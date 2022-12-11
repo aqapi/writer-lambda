@@ -10,5 +10,5 @@ RUN ls build/**
 # app
 FROM openjdk:17-jdk-slim-buster
 WORKDIR /app
-COPY --from=build /usr/app/build/libs/writer-lambda.jar /app/app.jar
+COPY --from=build /usr/app/build/libs/app.jar /app/app.jar
 ENTRYPOINT ["java","-jar","/app/app.jar"]
