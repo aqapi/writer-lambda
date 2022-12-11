@@ -25,6 +25,9 @@ public class MeasuringDataService {
 
     @Transactional
     public void addMeasuringDataWithValue(MeasuringDataDto dataDto) {
+        if (Objects.isNull(dataDto.getValues()) || Objects.isNull(dataDto.getKey()))
+            return;
+
         List<MeasuringValue> values = valueDtoMapper.to(dataDto.getValues());
         MeasuringData data = dataDtoMapper.to(dataDto);
 
