@@ -1,0 +1,36 @@
+name: Build and push container image
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Docker login
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+
+      - name: Docker build and push
+        env:
+          DOCKER_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        run: docker buildx build -t ${{ env.DOCKER_TAG }} . && docker push ${{ env.DOCKER_TAG }}
+
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: eu-central-1
