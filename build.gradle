@@ -12,13 +12,10 @@ plugins {
     id 'org.liquibase.gradle' version '2.0.4'
 }
 
-apply plugin: 'org.springframework.boot'
-apply plugin: 'org.springframework.boot.experimental.thin-launcher'
-assemble.dependsOn = [thinJar]
-
-group = 'pl.kozubek'
-
-sourceCompatibility = '11'
+java {
+    sourceCompatibility = JavaVersion.VERSION_17 // new
+    targetCompatibility = JavaVersion.VERSION_17 // new
+}
 
 configurations {
     compileOnly {
@@ -64,4 +61,12 @@ jar {
                 'Main-Class': 'pl.kozubek.writerlambda.Application'
         )
     }
+}
+
+compileJava {
+    options.compilerArgs += [
+            '-Amapstruct.suppressGeneratorTimestamp=true',
+            '-Amapstruct.suppressGeneratorVersionInfoComment=true',
+            '-Amapstruct.verbose=true'
+    ]
 }
