@@ -33,8 +33,8 @@ public class WriterLambdaApplication {
     private final MeasuringDataService dataService;
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(WriterLambdaApplication.class, args);
-        SpringApplication.exit(ctx, () -> 0);
+        SpringApplication.run(WriterLambdaApplication.class, args);
+        System.exit(0);
     }
 
     @PostConstruct
