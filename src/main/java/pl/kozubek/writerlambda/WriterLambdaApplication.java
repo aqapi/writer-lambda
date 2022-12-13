@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import pl.kozubek.writerlambda.app.WriterLambdaComponent;
 import pl.kozubek.writerlambda.app.data.model.dto.MeasuringDataDto;
@@ -32,25 +33,21 @@ public class WriterLambdaApplication {
     private final MeasuringDataService dataService;
 
     public static void main(String[] args) {
-        SpringApplication.run(WriterLambdaApplication.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(WriterLambdaApplication.class, args);
+        SpringApplication.exit(ctx, () -> 0);
     }
 
     @PostConstruct
     public void call() {
         List<MeasuringStationDto> stationDtos = client.getMeasuringStation();
-        System.out.print(stationDtos);
-        if (Objects.isNull(stationDtos)){
+        if (Objects.isNull(stationDtos)) {
             System.exit(0);
         }
         for (MeasuringStationDto stationDto : stationDtos) {
             stationService.addMeasuringStationWithCityAndCommune(stationDto);
-            System.out.println(stationDto);
             MeasuringDataDto dataDto = client.getData(stationDto.getId());
-            System.out.println(dataDto);
             dataDto.setStationId(stationDto.getId());
-            System.out.println(dataDto);
             dataService.addMeasuringDataWithValue(dataDto);
         }
-        System.exit(0);
     }
 }

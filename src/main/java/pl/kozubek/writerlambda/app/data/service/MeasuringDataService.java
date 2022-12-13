@@ -34,11 +34,12 @@ public class MeasuringDataService {
         if (Objects.isNull(values) || Objects.isNull(data))
             return;
 
+        MeasuringValue value = values.get(0);
+        dataMapper.addData(data);
+        dataMapper.addValue(value);
+
         Long dataId = data.getId();
-        for (MeasuringValue value : values) {
-            dataMapper.addValue(value);
-            Long valueId = value.getId();
-            dataMapper.connectDataAndValue(dataId, valueId);
-        }
+        Long valueId = value.getId();
+        dataMapper.connectDataAndValue(dataId, valueId);
     }
 }
