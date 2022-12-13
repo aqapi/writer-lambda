@@ -25,12 +25,10 @@ public class MeasuringDataService {
 
     @Transactional
     public void addMeasuringDataWithValue(MeasuringDataDto dataDto) {
-        System.out.println(dataDto);
         if (Objects.isNull(dataDto.getValues()) || Objects.isNull(dataDto.getKey()))
             return;
 
         List<MeasuringValue> values = valueDtoMapper.to(dataDto.getValues());
-        System.out.println(values);
         MeasuringData data = dataDtoMapper.to(dataDto);
 
         if (Objects.isNull(values) || Objects.isNull(data))
