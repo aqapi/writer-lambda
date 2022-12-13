@@ -35,6 +35,9 @@ public class MeasuringDataService {
 
         if (Objects.isNull(values) || Objects.isNull(data))
             return;
+        else if (values.isEmpty()) {
+            return;
+        }
 
         MeasuringValue value = values.get(0);
         dataMapper.addData(data);
