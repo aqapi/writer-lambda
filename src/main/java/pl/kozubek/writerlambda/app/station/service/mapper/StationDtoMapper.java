@@ -5,10 +5,19 @@ import org.springframework.stereotype.Component;
 import pl.kozubek.writerlambda.app.station.model.MeasuringStation;
 import pl.kozubek.writerlambda.app.station.model.dto.MeasuringStationDto;
 
+/**
+ * Obiekt <code>StationDtoMapper</code> odpowiedzialny za przemapowanie obiektów.
+ */
 @Component
 @RequiredArgsConstructor
 public class StationDtoMapper {
 
+    /**
+     * Funkcja odpowiedzialna za przemapowanie obiektów z typu <code>MeasuringStationDto</code> na <code>MeasuringStation</code>
+     *
+     * @param stationDto obiekt przechowujący informację na temat stacji pogodowych.
+     * @return Przemapowany obiekt wykorzystywany w naszej aplikacji
+     */
     public MeasuringStation to(MeasuringStationDto stationDto) {
         return MeasuringStation.builder()
                 .id(stationDto.getId())
@@ -20,6 +29,12 @@ public class StationDtoMapper {
                 .build();
     }
 
+    /**
+     * Funkcja odpowiedzialna za przemapowanie obiektów z typu <code>MeasuringStation</code> na <code>MeasuringStationDto</code>
+     *
+     * @param station obiekt przechowujący informację na temat stacji pogodowych.
+     * @return Przemapowany obiekt wykorzystywany w naszej aplikacji
+     */
     public MeasuringStationDto to(MeasuringStation station) {
         return MeasuringStationDto.builder()
                 .id(station.getId())
