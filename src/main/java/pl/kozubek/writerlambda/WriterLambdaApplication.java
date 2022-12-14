@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import pl.kozubek.writerlambda.app.WriterLambdaComponent;
 import pl.kozubek.writerlambda.app.data.model.dto.MeasuringDataDto;
@@ -19,6 +18,11 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Klasa <code>WriterLambdaApplication</code> główna odpowiedzialna za konfigurację oraz uruchomienie serwera spring boot.
+ * Klasa jest również odpowiedzialna za połączenie wszystkich komponentów. Obiekt powinien przy uruchomieniu serwera
+ * uruchomić metodę <code>call</code>.
+ */
 @SpringBootApplication
 @RequiredArgsConstructor
 @MapperScan(value = {"pl.kozubek.*.mapper", "pl.kozubek.**.mapper"}, markerInterface = ModelMapper.class)
@@ -37,6 +41,13 @@ public class WriterLambdaApplication {
         System.exit(0);
     }
 
+    /**
+     * Funkcja <code>call</code> odpowiedzialna za odpytanie zewnętrznego api oraz dopisaniu nowych wartości do bazy
+     * danych. Metoda jest zabezpieczona przed brakiem połączenia oraz brakiem odpowiedzi z strony api GIOS. Metoda
+     * najpierw wywołuje funkcję odpowiedzialną za pobranie wszystkich dostępnych stacji pogodowych, a następnie
+     * pobiera informację na temat jakości powietrza z tych stacji zarejestrowanych w rejestrze GIOS. Po skończonej
+     * pracy serwer spring boot powinien się wyłączyć z kodem końcowym 0.
+     */
     @PostConstruct
     public void call() {
         List<MeasuringStationDto> stationDtos = client.getMeasuringStation();

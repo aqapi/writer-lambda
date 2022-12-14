@@ -1,0 +1,15 @@
+pl.kozubek.writerlambda
+pl.kozubek.writerlambda.app
+pl.kozubek.writerlambda.app.data.mapper
+pl.kozubek.writerlambda.app.data.model
+pl.kozubek.writerlambda.app.data.model.dto
+pl.kozubek.writerlambda.app.data.service
+pl.kozubek.writerlambda.app.data.service.mapper
+pl.kozubek.writerlambda.app.station.mapper
+pl.kozubek.writerlambda.app.station.model
+pl.kozubek.writerlambda.app.station.model.dto
+pl.kozubek.writerlambda.app.station.service
+pl.kozubek.writerlambda.app.station.service.mapper
+pl.kozubek.writerlambda.mybatis
+pl.kozubek.writerlambda.mybatis.annotation
+pl.kozubek.writerlambda.webClient

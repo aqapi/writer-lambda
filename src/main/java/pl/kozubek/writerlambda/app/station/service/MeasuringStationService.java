@@ -3,9 +3,6 @@ package pl.kozubek.writerlambda.app.station.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.kozubek.writerlambda.app.data.model.MeasuringData;
-import pl.kozubek.writerlambda.app.data.model.dto.MeasuringDataDto;
-import pl.kozubek.writerlambda.app.data.service.MeasuringDataService;
 import pl.kozubek.writerlambda.app.station.mapper.MeasuringStationMapper;
 import pl.kozubek.writerlambda.app.station.model.MeasuringCity;
 import pl.kozubek.writerlambda.app.station.model.MeasuringCityCommune;
@@ -14,10 +11,12 @@ import pl.kozubek.writerlambda.app.station.model.dto.MeasuringStationDto;
 import pl.kozubek.writerlambda.app.station.service.mapper.CityDtoMapper;
 import pl.kozubek.writerlambda.app.station.service.mapper.CommuneDtoMapper;
 import pl.kozubek.writerlambda.app.station.service.mapper.StationDtoMapper;
-import pl.kozubek.writerlambda.webClient.MeasuringClient;
 
-import java.util.List;
-
+/**
+ * Obiekt <code>MeasuringStationService</code> odpowiedzialny za biznesową część działania aplikacji. Obiekt posiada 4
+ * zmienne odpowiedzialne za mappowanie danych oraz interfej udostępniający możliwość połączenia z bazą. Obiekt został
+ * okrazony adnotacjami odpowiedzialnymi za utworzenie konstruktora oraz zarządzanie przez kontekst spring'a.
+ */
 @Service
 @RequiredArgsConstructor
 public class MeasuringStationService {
@@ -26,9 +25,12 @@ public class MeasuringStationService {
     private final CityDtoMapper cityDtoMapper;
     private final CommuneDtoMapper communeDtoMapper;
 
-    public void addMeasuringStation(MeasuringStation station) {
-        stationMapper.addMeasuringStation(station);
-    }
+    /**
+     * Funkcja <code>addMeasuringStationWithCityAndCommune</code> odpowiedzialna za dodanie nowych stacji jakości
+     * powietrza do bazy danych. Metoda jest zabezpieczona przed duplikowaniem danych.
+     *
+     * @param stationDto Obiekt odpowiedzialny za reprezentowanie stacji jakości powietrza
+     */
 
     @Transactional
     public void addMeasuringStationWithCityAndCommune(MeasuringStationDto stationDto) {
