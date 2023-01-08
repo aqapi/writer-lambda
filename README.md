@@ -1,4 +1,4 @@
-# writer-lambda
+# writer-service
 
 ## Deployment
 
